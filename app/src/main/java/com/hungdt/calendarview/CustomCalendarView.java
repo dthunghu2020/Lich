@@ -3,6 +3,7 @@ package com.hungdt.calendarview;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,14 +28,20 @@ public class CustomCalendarView extends LinearLayout {
     TextView txtDate;
     GridView gvDay;
     private static final int MAX_CALENDAR_DAYS = 42;
-    Calendar calendar = Calendar.getInstance();
+    Calendar currentCalendar = Calendar.getInstance();
+    Date currentDate;
     Context context;
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy");
-    SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
+    String sss = "01/05/2020";
+    SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-
-
+    SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+    Date date = null;
+    Date firstDate = null;
+    MyGridAdapter myGridAdapter;
     List<Date> dates = new ArrayList<>();
 
     public CustomCalendarView(Context context) {
@@ -45,17 +53,18 @@ public class CustomCalendarView extends LinearLayout {
         this.context = context;
         initView();
         setUpCalendar();
+
         imgPrevious.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendar.add(Calendar.MONTH, -1);
+                currentCalendar.add(Calendar.MONTH, -1);
                 setUpCalendar();
             }
         });
         imgNext.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendar.add(Calendar.MONTH, 1);
+                currentCalendar.add(Calendar.MONTH, 1);
                 setUpCalendar();
             }
         });
@@ -63,7 +72,7 @@ public class CustomCalendarView extends LinearLayout {
         gvDay.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, ""+dateFormat.format(dates.get(position))+"/"+monthFormat.format(dates.get(position))+"/"+yearFormat.format(dates.get(position)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "" + dayFormat.format(dates.get(position)) + "/" + monthFormat.format(dates.get(position)) + "/" + yearFormat.format(dates.get(position)), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -82,18 +91,46 @@ public class CustomCalendarView extends LinearLayout {
     }
 
     private void setUpCalendar() {
-        String instanceDate = dateFormat.format(calendar.getTime());
+        //tháng năm lịch hiển thị.
+        currentDate = currentCalendar.getTime();
+        String instanceDate = dateFormat.format(currentCalendar.getTime());
         txtDate.setText(instanceDate);
         dates.clear();
-        Calendar monthCalendar = (Calendar) calendar.clone();
-        monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
-        monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
+        Calendar calender2 = (Calendar) currentCalendar.clone();
+        calender2.set(Calendar.DAY_OF_MONTH, 1);
+        int firstDayOfMonth = calender2.get(Calendar.DAY_OF_WEEK) - 1;
+        calender2.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
 
         while (dates.size() < MAX_CALENDAR_DAYS) {
-            dates.add(monthCalendar.getTime());
-            monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            dates.add(calender2.getTime());
+            calender2.add(Calendar.DAY_OF_MONTH, 1);
         }
+        //////////
+        try {
+            date = sdfDate.parse(sss);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        assert date != null;
+        calendar.setTime(date);
+        Date dateCheck = null;
+        try {
+            dateCheck = sdfDate.parse(sss);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        while (dateCheck.before(currentDate)){
+            calendar.add(Calendar.DATE, 25);
+            dateCheck = calendar.getTime();
+        }
+        calendar.add(Calendar.DATE, -25);
+        /////////////////////
+
+        myGridAdapter = new MyGridAdapter(context, dates, currentCalendar, calendar);
+        gvDay.setAdapter(myGridAdapter);
+
+
     }
 
 
