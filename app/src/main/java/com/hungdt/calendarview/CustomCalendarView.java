@@ -32,7 +32,7 @@ public class CustomCalendarView extends LinearLayout {
     Date currentDate;
     Context context;
 
-    String sss = "01/05/2020";
+    String sss = "01/07/2020";
     SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
@@ -125,9 +125,10 @@ public class CustomCalendarView extends LinearLayout {
             dateCheck = calendar.getTime();
         }
         calendar.add(Calendar.DATE, -25);
+        firstDate = calendar.getTime();
         /////////////////////
 
-        myGridAdapter = new MyGridAdapter(context, dates, currentCalendar, calendar);
+        myGridAdapter = new MyGridAdapter(context, dates, currentCalendar, firstDate);
         gvDay.setAdapter(myGridAdapter);
 
 
