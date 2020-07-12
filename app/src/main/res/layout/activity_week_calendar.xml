@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hungdt.calendarview.weekcalendar.WeekCalendar
+        android:id="@+id/week_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:wc_headerBgColor="#fff"
+        app:wc_headerHeight="48dp"
+        app:wc_calendarHeight="55dp"
+        app:wc_show_week="false"
+        android:background="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/tv_week_change"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"/>
+
+
+    <TextView
+        android:id="@+id/tv_select_date"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"/>
+
+    <Button
+        android:id="@+id/btn_add_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="addEvent"
+        android:text="Thêm một sự kiện"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="gotoDate"
+        android:text="Chuyển đến ngày được chỉ định"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="setSelectDate"
+        android:text="Đặt ngày đã chỉ định làm ngày đã chọn"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="gotoToday"
+        android:text="Trở lại hôm nay"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="getCurrentFirstDay"
+        android:text="Nhận ngày đầu tiên của trang hiện tại"/>
+
+    <TextView
+        android:id="@+id/tv_current_firstday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>

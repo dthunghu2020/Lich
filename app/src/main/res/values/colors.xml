@@ -50,4 +50,7 @@
 
     // this is for Deactivated dates
     <color name="calendar_range_middle_deactivated_bg">#673AB7</color>
+
+    <color name="colorDateSelect">#45dfb6</color>
+    <color name="colorTodayText">#45dfb6</color>
 </resources>
