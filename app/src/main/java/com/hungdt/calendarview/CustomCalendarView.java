@@ -1,12 +1,12 @@
 package com.hungdt.calendarview;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,10 +32,10 @@ public class CustomCalendarView extends LinearLayout {
     Date currentDate;
     Context context;
 
-    String sss = "01/07/2020";
-    SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+    SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy");
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
@@ -43,6 +43,11 @@ public class CustomCalendarView extends LinearLayout {
     Date firstDate = null;
     MyGridAdapter myGridAdapter;
     List<Date> dates = new ArrayList<>();
+    private EditText edtDate, edtNumberDay, edtCircle;
+    private String beginDay = "01-07-2020";
+    private int countChuKi = 25;
+    private int countRotKinh =5;
+    private Button btnSet;
 
     public CustomCalendarView(Context context) {
         super(context);
@@ -72,7 +77,17 @@ public class CustomCalendarView extends LinearLayout {
         gvDay.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, "" + dayFormat.format(dates.get(position)) + "/" + monthFormat.format(dates.get(position)) + "/" + yearFormat.format(dates.get(position)), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "" + dayFormat.format(dates.get(position)) + "-" + monthFormat.format(dates.get(position)) + "-" + yearFormat.format(dates.get(position)), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnSet.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                beginDay = edtDate.getText().toString();
+                countRotKinh = Integer.parseInt(edtNumberDay.getText().toString());
+                countChuKi = Integer.parseInt(edtCircle.getText().toString());
+                setUpCalendar();
             }
         });
     }
@@ -88,6 +103,10 @@ public class CustomCalendarView extends LinearLayout {
         imgPrevious = view.findViewById(R.id.imgPrevious);
         txtDate = view.findViewById(R.id.txtDate);
         gvDay = view.findViewById(R.id.gvDay);
+        edtDate = view.findViewById(R.id.edtDate);
+        edtNumberDay = view.findViewById(R.id.edtNumberDay);
+        edtCircle = view.findViewById(R.id.edtCircle);
+        btnSet = view.findViewById(R.id.btnSet);
     }
 
     private void setUpCalendar() {
@@ -107,7 +126,7 @@ public class CustomCalendarView extends LinearLayout {
         }
         //////////
         try {
-            date = sdfDate.parse(sss);
+            date = sdfDate.parse(beginDay);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -116,7 +135,7 @@ public class CustomCalendarView extends LinearLayout {
         calendar.setTime(date);
         Date dateCheck = null;
         try {
-            dateCheck = sdfDate.parse(sss);
+            dateCheck = sdfDate.parse(beginDay);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -128,7 +147,7 @@ public class CustomCalendarView extends LinearLayout {
         firstDate = calendar.getTime();
         /////////////////////
 
-        myGridAdapter = new MyGridAdapter(context, dates, currentCalendar, firstDate);
+        myGridAdapter = new MyGridAdapter(context, dates, currentCalendar, firstDate, countChuKi, countRotKinh);
         gvDay.setAdapter(myGridAdapter);
 
 

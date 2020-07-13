@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MyGridAdapter extends ArrayAdapter {
-    int countChuKi = 25;
-    int countRotKinh = 5;
+    int countChuKi;
+    int countRotKinh;
     int beginRed = 0;
     int endRed = 0;
     int beginEgg = 0;
@@ -37,11 +37,13 @@ public class MyGridAdapter extends ArrayAdapter {
     private ImageView imgLeft, imgRight, imgRedDay, imgEggDay, imgEgg;
     TextView txtDay;
 
-    public MyGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, Date firstDate) {
+    public MyGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, Date firstDate, int countChuKi, int countRotKinh) {
         super(context, R.layout.single_cell_layout);
         this.dates = dates;
         this.firstDate = firstDate;
         this.currentCalendar = currentCalendar;
+        this.countChuKi = countChuKi;
+        this.countRotKinh = countRotKinh;
         inflater = LayoutInflater.from(context);
     }
 
@@ -73,11 +75,12 @@ public class MyGridAdapter extends ArrayAdapter {
         }
         initView(view);
         //////////////////////////////////
+        Boolean isRedDay = false;
         beginRed = countNumberDay(Integer.parseInt(sdfYeah.format(firstDate)), Integer.parseInt(sdfMonth.format(firstDate)), Integer.parseInt(sdfDay.format(firstDate)));
         endRed = beginRed + countRotKinh;
-        eggDay = beginRed + countChuKi - 13;
-        beginEgg = eggDay - 5;
-        endEgg = eggDay + 5;
+        eggDay = beginRed + countChuKi - 15;
+        beginEgg = eggDay - 6;
+        endEgg = eggDay + 4;
         int displayDate = countNumberDay(displayYear, displayMonth, displayDay);
         if (displayDate > endRed) {
             beginRed += countChuKi;
@@ -90,21 +93,8 @@ public class MyGridAdapter extends ArrayAdapter {
             beginEgg += countChuKi;
             endEgg += countChuKi;
         }
-
-        if (beginEgg <= displayDate && displayDate <= endEgg) {
-            if (displayDate == beginEgg) {
-                imgLeft.setVisibility(View.VISIBLE);
-            }
-            if (displayDate == endEgg) {
-                imgRight.setVisibility(View.VISIBLE);
-            }
-            imgEggDay.setVisibility(View.VISIBLE);
-        }
-
-        if (displayDate == eggDay) {
-            imgEgg.setVisibility(View.VISIBLE);
-        }
         if (beginRed <= displayDate && displayDate < endRed) {
+            isRedDay=true;
             if (displayDate == beginRed) {
                 imgLeft.setVisibility(View.VISIBLE);
             }
@@ -113,6 +103,24 @@ public class MyGridAdapter extends ArrayAdapter {
             }
             imgRedDay.setVisibility(View.VISIBLE);
         }
+        if (beginEgg <= displayDate && displayDate <= endEgg) {
+            if(isRedDay){
+                beginEgg++;
+            }else {
+                if (displayDate == beginEgg) {
+                    imgLeft.setVisibility(View.VISIBLE);
+                }
+                if (displayDate == endEgg) {
+                    imgRight.setVisibility(View.VISIBLE);
+                }
+                imgEggDay.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (displayDate == eggDay) {
+            imgEgg.setVisibility(View.VISIBLE);
+        }
+
         //////////////////////////////////
 
         if (displayDay == instanceDay && displayMonth == instanceMonth && displayYear == instanceYear) {
